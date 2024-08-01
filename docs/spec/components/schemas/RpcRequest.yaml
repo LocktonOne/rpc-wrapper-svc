@@ -1,0 +1,28 @@
+type: object
+required:
+  - jsonrpc
+  - method
+  - params
+  - id
+properties:
+  jsonrpc:
+    type: string
+    x-omitempty: false
+    example: "2.0"
+  method:
+    type: string
+    x-omitempty: false
+    example: "eth_getBalance"
+  params:
+    type: string
+    format:  json.RawMessage
+    x-omitempty: false
+    example:
+      [
+        "0x627306090abaB3A6e1400e9345bC60c78a8BEf57",
+        "latest"
+      ]
+  id:
+    type: integer
+    format: int64
+    example: 1

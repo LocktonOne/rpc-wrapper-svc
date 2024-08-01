@@ -4,7 +4,7 @@ project: 'backend'
 image: builder
 from: golang:1.20-alpine
 docker:
-  WORKDIR: /go/src/gitlab.com/tokene/lockton-one/rpc-wrapper-svc
+  WORKDIR: /go/src/rpc-wrapper-svc
 git:
 - add: /
   to: /go/src/gitlab.com/tokene/lockton-one/rpc-wrapper-svc

@@ -1,9 +1,8 @@
 package main
 
 import (
+	"gitlab.com/tokene/lockton-one/rpc-wrapper-svc/internal/cli"
 	"os"
-
-  "gitlab.com/tokene/lockton-one/rpc-wrapper-svc/internal/cli"
 )
 
 func main() {

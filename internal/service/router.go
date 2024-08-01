@@ -1,24 +1,26 @@
 package service
 
 import (
-  "gitlab.com/tokene/lockton-one/rpc-wrapper-svc/internal/service/handlers"
-  "github.com/go-chi/chi"
-  "gitlab.com/distributed_lab/ape"
+	"github.com/go-chi/chi"
+	"gitlab.com/distributed_lab/ape"
+	"gitlab.com/tokene/lockton-one/rpc-wrapper-svc/internal/service/handlers"
 )
 
 func (s *service) router() chi.Router {
-  r := chi.NewRouter()
+	r := chi.NewRouter()
 
-  r.Use(
-    ape.RecoverMiddleware(s.log),
-    ape.LoganMiddleware(s.log),
-    ape.CtxMiddleware(
-      handlers.CtxLog(s.log),
-    ),
-  )
-  r.Route("/integrations/rpc-wrapper-svc", func(r chi.Router) {
-    // configure endpoints here
-  })
+	r.Use(
+		ape.RecoverMiddleware(s.log),
+		ape.LoganMiddleware(s.log),
+		ape.CtxMiddleware(
+			handlers.CtxLog(s.log),
+			handlers.CtxRegistryConfig(s.cfg.RegistryConfig()),
+			handlers.CtxEthRPCConfig(s.cfg.EthRPCConfig()),
+		),
+	)
+	r.Post("/", handlers.HandleRPC)
+	r.Get("/data", handlers.GetBytecode)
+	r.Get("/data/deploy", handlers.GetDeployData)
 
-  return r
+	return r
 }

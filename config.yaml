@@ -5,6 +5,15 @@ log:
 listener:
   addr: :8000
 
+vault:
+  endpoint: ""
+  token: ""
+  mount_path: ""
+  secret_path: ""
+
+eth_rpc:
+  client: ""
+
 cop:
   disabled: true
   endpoint: "http://..."
