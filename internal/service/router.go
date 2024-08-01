@@ -19,8 +19,6 @@ func (s *service) router() chi.Router {
 		),
 	)
 	r.Post("/", handlers.HandleRPC)
-	r.Get("/data", handlers.GetBytecode)
-	r.Get("/data/deploy", handlers.GetDeployData)
 
 	return r
 }
