@@ -11,6 +11,7 @@ import (
 	"gitlab.com/distributed_lab/ape/problems"
 	"gitlab.com/distributed_lab/logan/v3/errors"
 	"gitlab.com/tokene/lockton-one/rpc-wrapper-svc/internal/service/requests"
+	"gitlab.com/tokene/lockton-one/rpc-wrapper-svc/solidity/generated/allowedcontractregistry"
 	"io"
 	"net/http"
 )
@@ -23,35 +24,63 @@ func HandleRPC(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if request.Method == "eth_sendRawTransaction" {
-		params := []string{}
-		if err = json.Unmarshal(request.Params, &params); err != nil {
-			Log(r).WithError(errors.Wrap(err, "failed to unmarshal raw message"))
-			ape.RenderErr(w, problems.InternalError())
-			return
-		}
-		if len(params[0]) > 2 && params[0][:2] == "0x" {
-			params[0] = params[0][2:]
-		}
+	if request.Method != "eth_sendRawTransaction" {
+		Log(r).WithError(errors.Wrap(err, "tx is not a deploy"))
+		ape.RenderErr(w, problems.BadRequest(errors.Wrap(err, "tx is not a deploy"))...)
+		return
+	}
+	params := []string{}
+	if err = json.Unmarshal(request.Params, &params); err != nil {
+		Log(r).WithError(errors.Wrap(err, "failed to unmarshal raw message"))
+		ape.RenderErr(w, problems.InternalError())
+		return
+	}
+	if len(params[0]) > 2 && params[0][:2] == "0x" {
+		params[0] = params[0][2:]
+	}
 
-		rawTxBytes, err := hex.DecodeString(params[0])
-		if err != nil {
-			Log(r).WithError(errors.Wrap(err, "failed to decode raw transaction hex"))
-			ape.RenderErr(w, problems.InternalError())
-			return
-		}
+	rawTxBytes, err := hex.DecodeString(params[0])
+	if err != nil {
+		Log(r).WithError(errors.Wrap(err, "failed to decode raw transaction hex"))
+		ape.RenderErr(w, problems.InternalError())
+		return
+	}
 
-		tx := new(types.Transaction)
-		err = rlp.Decode(bytes.NewReader(rawTxBytes), tx)
-		if err != nil {
-			Log(r).WithError(errors.Wrap(err, "failed to decode raw transaction"))
-			ape.RenderErr(w, problems.InternalError())
-			return
-		}
-		if tx.To() == nil {
-			ape.Render(w, "Deploy")
-			return
-		}
+	tx := new(types.Transaction)
+	err = rlp.Decode(bytes.NewReader(rawTxBytes), tx)
+	if err != nil {
+		Log(r).WithError(errors.Wrap(err, "failed to decode raw transaction"))
+		ape.RenderErr(w, problems.InternalError())
+		return
+	}
+	if tx.To() != nil {
+		Log(r).WithError(errors.Wrap(err, "tx is not a deploy"))
+		ape.RenderErr(w, problems.BadRequest(errors.Wrap(err, "tx is not a deploy"))...)
+		return
+	}
+	var deployData [32]byte
+	copy(deployData[:], tx.Data())
+	allowedContractRegistry, err := allowedcontractregistry.NewAllowedcontractregistry(RegistryConfig(r).Address, EthRPCConfig(r).EthClient())
+	if err != nil {
+		Log(r).WithError(err).Debug("can't get contract address")
+		ape.RenderErr(w, problems.InternalError())
+		return
+	}
+	ok, err := allowedContractRegistry.IsAllowedToDeploy(nil, deployData)
+	if err != nil {
+		Log(r).WithError(errors.Wrap(err, "failed to check if contract can be deployed"))
+		ape.RenderErr(w, problems.InternalError())
+		return
+	}
+	if !ok {
+		Log(r).WithError(errors.Wrap(err, "contract can not be deployed"))
+		ape.RenderErr(w, problems.BadRequest(errors.Wrap(err, "contract can not be deployed"))...)
+		return
+	}
+	if _, err = allowedContractRegistry.ToggleDeployedFlag(nil, deployData); err != nil {
+		Log(r).WithError(errors.Wrap(err, "failed to toggle deployed flag"))
+		ape.RenderErr(w, problems.InternalError())
+		return
 	}
 
 	reqByte, err := json.Marshal(request)
