@@ -1,11 +1,11 @@
 default:
   image:
-      name: "tokend/werf:0.0.15"
-      entrypoint: [""]
+    name: "tokend/werf:0.0.15"
+    entrypoint: [""]
   services:
-        - name: docker:20-dind
-          alias: docker
-          command: ["--tls=false"]
+    - name: docker:20-dind
+      alias: docker
+      command: ["--tls=false"]
   tags:
     - "tokend"
 
