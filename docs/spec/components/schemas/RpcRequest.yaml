@@ -23,6 +23,6 @@ properties:
         "latest"
       ]
   id:
-    type: integer
-    format: int64
+    type: string
+    format: json.RawMessage
     example: 1

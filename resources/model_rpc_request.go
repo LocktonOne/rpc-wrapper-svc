@@ -7,7 +7,7 @@ package resources
 import "encoding/json"
 
 type RpcRequest struct {
-	Id      int64           `json:"id"`
+	Id      json.RawMessage `json:"id"`
 	Jsonrpc string          `json:"jsonrpc"`
 	Method  string          `json:"method"`
 	Params  json.RawMessage `json:"params"`
