@@ -4,6 +4,7 @@ go 1.21
 
 require (
 	github.com/alecthomas/kingpin v2.2.6+incompatible
+	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
 	github.com/ethereum/go-ethereum v1.14.7
 	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/hashicorp/vault/api v1.14.0
