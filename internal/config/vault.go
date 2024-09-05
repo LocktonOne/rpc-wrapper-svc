@@ -73,7 +73,7 @@ func (c *vaultConfig) getContractAddress() common.Address {
 		panic(err)
 	}
 
-	address := common.HexToAddress(config.Addresses["MasterContractsRegistry"])
+	address := common.HexToAddress(config.Addresses["AllowedContractRegistry"])
 
 	return address
 }

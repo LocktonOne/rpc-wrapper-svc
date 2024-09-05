@@ -95,15 +95,15 @@ func HandleRPC(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			if !ok {
-				Log(r).WithError(err).Info("contract can not be deployed")
+				Log(r).Info("contract can not be deployed")
 				ape.RenderErr(w, problems.BadRequest(errors.Wrap(err, "contract can not be deployed"))...)
 				return
 			}
-			if _, err = allowedContractRegistry.ToggleDeployedFlag(nil, deployData); err != nil {
-				Log(r).WithError(err).Info("failed to toggle deployed flag")
-				ape.RenderErr(w, problems.InternalError())
-				return
-			}
+			//if _, err = allowedContractRegistry.ToggleDeployedFlag(nil, deployData); err != nil {
+			//	Log(r).WithError(err).Info("failed to toggle deployed flag")
+			//	ape.RenderErr(w, problems.InternalError())
+			//	return
+			//}
 		}
 	}
 	//reqByte, err := json.Marshal(request)
