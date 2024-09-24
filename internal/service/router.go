@@ -18,7 +18,7 @@ func (s *service) router() chi.Router {
 			handlers.CtxEthRPCConfig(s.cfg.EthRPCConfig()),
 		),
 	)
-	r.Post("/", handlers.HandleRPC)
+	r.Post("/rpc", handlers.HandleRPC)
 
 	return r
 }
