@@ -19,6 +19,6 @@ func (s *service) router() chi.Router {
 		),
 	)
 	r.Post("/", handlers.HandleRPC)
-
+	r.Get("/", handlers.GetRPC)
 	return r
 }
