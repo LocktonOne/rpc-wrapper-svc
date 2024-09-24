@@ -18,7 +18,8 @@ import (
 )
 
 func HandleRPC(w http.ResponseWriter, r *http.Request) {
-	// Read the body into a byte slice
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	bodyBytes, err := io.ReadAll(r.Body)
 	if err != nil {
 		Log(r).WithError(err).Info("failed to get body bytes")
