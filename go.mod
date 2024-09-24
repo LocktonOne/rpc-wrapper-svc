@@ -33,6 +33,7 @@ require (
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/getsentry/raven-go v0.2.0 // indirect
 	github.com/getsentry/sentry-go v0.27.0 // indirect
+	github.com/go-chi/cors v1.2.1 // indirect
 	github.com/go-jose/go-jose/v4 v4.0.1 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/go-ozzo/ozzo-validation/v4 v4.2.1 // indirect
