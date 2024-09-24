@@ -18,7 +18,7 @@ import (
 )
 
 func HandleRPC(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	enableCORS(&w, r)
 
 	bodyBytes, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -135,4 +135,12 @@ func HandleRPC(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(res.StatusCode)
 	ape.Render(w, unmarshalResp)
 	return
+}
+
+func enableCORS(w *http.ResponseWriter, r *http.Request) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, OPTIONS, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Headers", "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Signature,Account-Id")
+	(*w).Header().Set("Access-Control-Allow-Credentials", "true")
+	(*w).Header().Set("Access-Control-Expose-Headers", "Content-Length,Content-Range")
 }
