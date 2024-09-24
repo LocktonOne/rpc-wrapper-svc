@@ -4,6 +4,7 @@ import (
 	"github.com/go-chi/chi"
 	"gitlab.com/distributed_lab/ape"
 	"gitlab.com/tokene/lockton-one/rpc-wrapper-svc/internal/service/handlers"
+	"gitlab.com/tokene/lockton-one/rpc-wrapper-svc/internal/service/middlewares"
 )
 
 func (s *service) router() chi.Router {
@@ -17,8 +18,8 @@ func (s *service) router() chi.Router {
 			handlers.CtxRegistryConfig(s.cfg.RegistryConfig()),
 			handlers.CtxEthRPCConfig(s.cfg.EthRPCConfig()),
 		),
+		middlewares.EnableCors(),
 	)
 	r.Post("/", handlers.HandleRPC)
-	r.Get("/", handlers.GetRPC)
 	return r
 }

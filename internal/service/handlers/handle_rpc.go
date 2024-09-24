@@ -18,7 +18,7 @@ import (
 )
 
 func HandleRPC(w http.ResponseWriter, r *http.Request) {
-	//enableCORS(&w, r)
+	enableCORS(&w, r)
 
 	bodyBytes, err := io.ReadAll(r.Body)
 	if err != nil {
